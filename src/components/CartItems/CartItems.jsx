@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const CartItems = ({ cartItems, totalPrice }) => {
+const CartItems = ({ cartItems, totalPrice, handleRemove }) => {
  
   return (
     <div className="py-4 border-t border-b my-4">
@@ -19,6 +19,7 @@ const CartItems = ({ cartItems, totalPrice }) => {
             />
             <p>Qty: 1</p>
             <p>Price: ${items.price}</p>
+            <button onClick={() => handleRemove(items.id)} className="py-1 px-2 bg-red-400 text-white rounded-lg cursor-pointer my-1">Delete</button>
           </div>
         ))}
       </div>
@@ -28,7 +29,8 @@ const CartItems = ({ cartItems, totalPrice }) => {
 
 CartItems.propTypes = {
   cartItems: PropTypes.array.isRequired,
-  totalPrice: PropTypes.number.isRequired
+  totalPrice: PropTypes.number.isRequired,
+  handleRemove: PropTypes.func.isRequired
 }
 
 export default CartItems;

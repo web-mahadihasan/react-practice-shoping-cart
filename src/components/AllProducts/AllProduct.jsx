@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Product from '../Product/Product';
 import CartItems from '../CartItems/CartItems';
-import { getDataFromLS, setDataLS } from '../../utilities/localStorage';
+import { getDataFromLS, removeProductFromLs, setDataLS } from '../../utilities/localStorage';
 
 const AllProduct = () => {
   const [products, setProducts] = useState([]);
@@ -30,7 +30,7 @@ useEffect(() => {
   }
 }, [products]);
 
-  const handleBuyBtn = (product) => {
+  const handleAddToCart = (product) => {
     if (!shoppingCart.includes(product)) {
       const newCart = [...shoppingCart, product];
       setShoppingCart(newCart);
@@ -41,15 +41,23 @@ useEffect(() => {
     }    
   }
 
+  const handleRemove = (removeProductId) => {
+    const remainingProduct = shoppingCart.filter(product => product.id !== removeProductId)
+    setShoppingCart(remainingProduct);
+    const cartPrice = remainingProduct.reduce((prev, curr) => prev + curr.price, 0);
+    setTotalPrice(cartPrice.toFixed(2));
+    removeProductFromLs(removeProductId);
+
+  }
 
 
   return (
     <div>
-      <CartItems cartItems = {shoppingCart} totalPrice = {totalPrice}/>
+      <CartItems cartItems = {shoppingCart} totalPrice = {totalPrice} handleRemove = {handleRemove}/>
       <h3 className='text-2xl font-bold text-center py-6'>Discover Amazing Deals on Fashion, Tech, and More</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {products.map((product) => (
-          <Product key={product.id} product={product} addToCart={handleBuyBtn} />
+          <Product key={product.id} product={product} addToCart={handleAddToCart} />
         ))}
       </div>
     </div>
